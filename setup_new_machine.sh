@@ -57,13 +57,7 @@ echo ""
 echo "[ 4/4 ] Checking .env..."
 if [ ! -f "$ENV_FILE" ]; then
     cp "$ARUNI_DIR/.env.example" "$ENV_FILE"
-    echo "  Created .env from template"
-    echo ""
-    echo "  IMPORTANT: Open $ENV_FILE and fill in:"
-    echo "    SHEET_ID          - get from Aruni admin"
-    echo "    GOOGLE_CREDS_PATH - already set to ./google_creds.json"
-    echo ""
-    read -p "  Press Enter once you have filled in .env..." _
+    echo "  Created .env (SHEET_ID pre-filled)"
 fi
 
 # ── Verify connection ─────────────────────────────────────────────────────────

@@ -65,15 +65,7 @@ echo.
 echo [ 4/4 ] Checking .env...
 if not exist "%ENV_FILE%" (
     copy "%ARUNI_DIR%.env.example" "%ENV_FILE%" >nul
-    echo   Created .env from template
-    echo.
-    echo   IMPORTANT: Open %ENV_FILE% and fill in:
-    echo     SHEET_ID          - get from Aruni admin
-    echo     GOOGLE_CREDS_PATH - already set to ./google_creds.json
-    echo.
-    notepad "%ENV_FILE%"
-    echo   Press Enter once you have saved .env...
-    pause >nul
+    echo   Created .env (SHEET_ID pre-filled)
 )
 
 :: ── Verify connection ───────────────────────────────────────────────────────
