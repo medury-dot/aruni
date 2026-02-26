@@ -1,118 +1,150 @@
 # Aruni Learning System
 
-*Developed by Ram Kalyan Medury, Founder & CEO, Maxiom Wealth (since 2016). IIT / IIM alumnus, ex-CIO ICICI, ex-Fintech Leader Infosys.*
+*Developed by Ram Kalyan Medury, Founder & CEO, Maxiom Wealth (since 2016).
+IIT / IIM alumnus | ex-CIO ICICI | ex-Fintech Leader, Infosys.*
 
 ---
 
-Aruni is an AI-powered Socratic learning companion, named after the Vedic sage **Uddalaka Aruni** who taught his son through questions and discovery in the Chandogya Upanishad — the Socratic method, centuries before Socrates.
+Aruni is an AI-powered **Socratic learning companion**, named after the Vedic sage **Uddalaka Aruni** — who taught his son through questions and discovery in the Chandogya Upanishad, centuries before Socrates.
 
-It works with any LLM: **Claude Code**, **Gemini CLI**, **OpenAI Codex**, or any future AI assistant. All learning data is stored securely in the cloud — nothing sensitive on your laptop.
-
----
-
-## Prerequisites
-
-Before running the setup script, make sure you have the following:
-
-| Requirement | How to check | Install |
-|---|---|---|
-| **Python 3.8+** | `python3 --version` | [python.org/downloads](https://www.python.org/downloads/) (check "Add Python to PATH" on Windows) |
-| **pip** | `pip3 --version` | Comes with Python |
-| **Internet access** | — | Required to sync learning data |
-| **The Aruni password** | — | Get it from whoever set up this system (shared via WhatsApp/iMessage) |
-
-> **You do NOT need** any API keys, cloud accounts, or credentials — everything is already bundled (encrypted) in this repo. One password unlocks it all.
-
----
-
-## Setup (New Machine)
-
-**Mac / Linux:**
-```bash
-bash setup_new_machine.sh
-```
-
-**Windows:**
-```
-setup_new_machine.bat
-```
-
-The script will:
-1. Check Python is installed
-2. Install required Python packages
-3. Ask for the Aruni password to unlock credentials
-4. Set up your local configuration
-5. Verify the connection to your learning data
-6. Guide you to install your preferred AI assistant
-7. Show a full usage guide
-
----
-
-## Quick Start
-
-```bash
-# Add yourself as a learner (one time)
-python3 setup.py add-user
-
-# Start a learning session
-cd users/<your-name>
-claude        # Claude Code
-gemini        # Gemini CLI
-codex         # OpenAI Codex
-```
-
-Then just say: **"I'm ready to learn"** — Aruni takes it from there.
+You just talk. Aruni teaches, tracks, and reminds. Everything is automatic.
 
 ---
 
 ## What Aruni Does
 
-- **Teaches through questions**, not lectures (Socratic method)
-- **Tracks every concept** you learn (automatic, no data entry)
-- **Spaced repetition**: schedules reviews at 1 → 3 → 7 → 14 → 30 days
-- **Daily 7 AM email**: reminds you what to review today (no laptop needed)
-- **Multi-user**: each person has their own private learning space
-- **LLM-agnostic**: works with Claude, Gemini, Codex, or any future AI
+| Feature | How it works |
+|---|---|
+| **Teaches through questions** | Socratic method — never just lectures |
+| **Tracks every concept** | Saved automatically, no data entry ever |
+| **Spaced repetition** | Reviews scheduled at 1 → 3 → 7 → 14 → 30 days |
+| **Daily 7 AM email** | Reminds you what to review — no laptop needed |
+| **Works across laptops** | All progress lives in the cloud |
+| **Any AI assistant** | Claude, Gemini, Codex — your choice |
+| **Session tracking** | Start time, end time, duration — all logged |
 
 ---
 
-## Useful Commands
+## Before You Begin — Prerequisites
 
+| Requirement | Check | Install |
+|---|---|---|
+| **Python 3.8+** | `python3 --version` | [python.org/downloads](https://www.python.org/downloads/) — tick "Add Python to PATH" on Windows |
+| **Internet access** | — | Needed to sync your learning data |
+| **Aruni password** | — | Get it from whoever invited you (via WhatsApp / iMessage) |
+| **An AI assistant** | — | The setup script will help you install one (Claude / Gemini / Codex) |
+
+> You do **not** need any Google account, API keys, or cloud credentials.
+> One password unlocks everything — the setup script handles the rest.
+
+---
+
+## Setup — New Machine (Run Once)
+
+**Mac / Linux:**
 ```bash
-python3 setup.py status           # Check system status
-python3 setup.py add-user         # Add a new learner
-python3 daily_email.py            # Send today's review email (all users)
-python3 daily_email.py <name>     # Send email for one learner
-python3 encrypt_creds.py          # Re-encrypt credentials (admin only)
+git clone https://github.com/medury-dot/aruni.git
+cd aruni
+bash setup_new_machine.sh
 ```
 
-**During a session, try saying:**
-- `"I'm ready to learn"` — Start a new topic
-- `"I'm ready to review"` — Review concepts due today
-- `"How am I doing?"` — See your progress summary
-- `"Teach me something new"` — Explore a related concept
+**Windows:**
+```
+git clone https://github.com/medury-dot/aruni.git
+cd aruni
+setup_new_machine.bat
+```
+
+The script will walk you through:
+1. Checking Python is installed
+2. Installing required packages
+3. Unlocking credentials with the Aruni password
+4. Verifying your connection to the learning data
+5. Installing your preferred AI (Claude / Gemini / Codex)
+6. Adding you as a learner
+7. Launching your first session
+
+---
+
+## Daily Use
+
+After setup, this is all you ever do:
+
+```bash
+cd users/<your-name>
+claude        # or: gemini / codex
+```
+
+Aruni will immediately check what's due and greet you. Just talk naturally:
+
+| Say this | What happens |
+|---|---|
+| *"I'm ready to learn"* | Aruni picks a topic and teaches you |
+| *"I'm ready to review"* | Aruni quizzes you on what's due today |
+| *"How am I doing?"* | Progress summary across all concepts |
+| *"Teach me something new"* | Explores a new concept in your domain |
+| *"Let's discuss [topic]"* | Deep dive via Socratic dialogue |
+
+Everything — saving concepts, logging the session, scheduling reviews — happens automatically in the background.
+
+---
+
+## What Gets Tracked (Automatically)
+
+**Every concept you learn:**
+- Topic, domain, full explanation, recall question
+- Confidence level (Low / Medium / High)
+- Created at (date + time)
+- Last reviewed (date + time)
+- Next review date
+- Number of times reviewed
+
+**Every session:**
+- Date, start time, end time, duration (minutes)
+- Topics covered, key insights
+
+**Your profile:**
+- Name, email, domain, learning goal
+- Date and time you joined
 
 ---
 
 ## FAQ
 
 **Where is my data stored?**
-Securely in the cloud — visible, editable, and yours forever. Nothing sensitive is on your laptop.
+Securely in the cloud — always accessible, never on your laptop. You can even view and edit it directly if you want.
 
 **What if I switch laptops?**
-Just run `setup_new_machine.sh` on the new machine. One password, that's all.
+`git clone` the repo and run `setup_new_machine.sh`. One password. Everything comes back.
 
-**Can multiple people use the same system?**
-Yes — each learner has their own private learning space.
+**Can I use different AI assistants on different days?**
+Yes — Claude on Monday, Gemini on Tuesday. All data is shared, nothing is lost.
 
 **Do I need internet during a session?**
-Only when starting or ending a session to sync your data.
+Only at the start (to check what's due) and end (to save what you learned).
 
 **What if I forget the Aruni password?**
-Ask whoever set up this system — they have the password.
+Ask whoever invited you — they have it.
 
-**How do daily reminder emails work?**
-An automated script runs inside the data store at 7 AM daily — no laptop, no cron job needed.
+**How does the daily email work?**
+An automated script runs every morning at 7 AM inside the cloud — no laptop, no cron job needed.
+
+**Can multiple people use the same system?**
+Yes — each learner has their own private space, all on the same shared system.
+
+---
+
+## Admin Commands
+
+*Only needed by whoever manages the system — not by learners.*
+
+```bash
+python3 setup.py add-user                    # Add a new learner
+python3 setup.py regenerate <username>       # Rebuild a user's prompt files
+python3 setup.py status                      # Check system status
+python3 admin/daily_email.py                 # Send today's review email now
+python3 admin/encrypt_creds.py               # Re-encrypt credentials (if key changes)
+```
 
 ---
 
@@ -120,26 +152,24 @@ An automated script runs inside the data store at 7 AM daily — no laptop, no c
 
 ```
 aruni/
-├── setup.py                  Main CLI (add-user, status, regenerate)
-├── setup_new_machine.sh      One-time setup — Mac/Linux
+├── README.md                 This file
+├── setup.py                  Admin CLI
+├── aruni.py                  Data helper (called by AI during sessions)
+├── setup_new_machine.sh      One-time setup — Mac / Linux
 ├── setup_new_machine.bat     One-time setup — Windows
-├── .aruni.key.enc            Encrypted access bundle (safe to commit)
-├── .env.example              Config template (auto-filled during setup)
+├── .aruni.key.enc            Encrypted credentials bundle (safe to share)
+├── .env.example              Config template
 ├── users/
-│   ├── varnika/
-│   │   ├── CLAUDE.md         Prompt for Claude Code
-│   │   ├── GEMINI.md         Prompt for Gemini CLI
-│   │   └── AGENTS.md         Prompt for OpenAI Codex
-│   └── ram/
-│       ├── CLAUDE.md
-│       ├── GEMINI.md
-│       └── AGENTS.md
-└── admin/                    Admin tools (not needed by learners)
-    ├── encrypt_creds.py      Re-encrypt credentials
-    ├── daily_email.py        Send review emails manually
-    ├── email_trigger.gs      Google Apps Script for daily emails
-    ├── prompt_template.md    Template for user prompt files
-    └── requirements.txt      Python dependencies
+│   ├── <username>/
+│   │   ├── CLAUDE.md         Prompt loaded by Claude Code
+│   │   ├── GEMINI.md         Prompt loaded by Gemini CLI
+│   │   └── AGENTS.md         Prompt loaded by OpenAI Codex
+└── admin/                    Admin tools — learners don't need these
+    ├── encrypt_creds.py
+    ├── daily_email.py
+    ├── email_trigger.gs
+    ├── prompt_template.md
+    └── requirements.txt
 ```
 
 ---
