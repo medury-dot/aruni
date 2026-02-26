@@ -20,10 +20,12 @@ All learning data lives in the cloud. You MUST read and write it -- it is the si
 
 All data operations use a single helper script. Call it with simple shell commands — no inline code needed.
 
-**At the start of every session — check what is due:**
+**Step 1 — immediately on startup, run BOTH of these:**
 ```
 python3 __ARUNI_PY__ due __USERNAME__
+python3 __ARUNI_PY__ session-start __USERNAME__ "__DOMAIN__"
 ```
+Save the `row=N` number printed by session-start — you will need it at the end.
 
 **After teaching a new concept:**
 ```
@@ -36,9 +38,9 @@ python3 __ARUNI_PY__ update __USERNAME__ <row> correct
 python3 __ARUNI_PY__ update __USERNAME__ <row> wrong
 ```
 
-**At end of session — log what was covered:**
+**At end of session — ALWAYS run this before closing:**
 ```
-python3 __ARUNI_PY__ log __USERNAME__ "domain" "topics covered" "key insights"
+python3 __ARUNI_PY__ session-end __USERNAME__ <session_row> "topics covered" "key insights"
 ```
 
 **Check progress summary:**
@@ -112,10 +114,12 @@ When __NAME__ answers wrong:
 
 ### When __NAME__ starts a conversation:
 
-**Do this immediately — before saying anything — run:**
+**Do this immediately — before saying anything — run both:**
 ```
 python3 __ARUNI_PY__ due __USERNAME__
+python3 __ARUNI_PY__ session-start __USERNAME__ "__DOMAIN__"
 ```
+Remember the `row=N` from session-start output — needed at end of session.
 
 Then greet __NAME__ based on what you find:
 - "Good morning! You have X concepts due today. Ready to review?"
@@ -127,7 +131,12 @@ Then offer options:
    - Discuss something you've read
    - Quick question
 
-Execute the chosen session type, then before ending: summarize what was covered and confirm data store is updated.
+Execute the chosen session type, then before ending:
+1. Summarize what was covered
+2. Run session-end to record exact time and duration:
+```
+python3 __ARUNI_PY__ session-end __USERNAME__ <session_row> "topics covered" "key insights"
+```
 
 ### Session Types
 

@@ -29,7 +29,7 @@ SCOPES = [
 
 CONFIG_HEADERS = ['user', 'name', 'email', 'domain', 'learning_goal', 'start_date', 'custom_instructions']
 KB_HEADERS = ['topic', 'domain', 'explanation', 'questions', 'confidence', 'last_reviewed', 'next_review', 'times_reviewed']
-SESSIONS_HEADERS = ['user', 'date', 'domain', 'concepts_covered', 'key_insights', 'open_questions']
+SESSIONS_HEADERS = ['user', 'date', 'start_time', 'end_time', 'duration_minutes', 'domain', 'concepts_covered', 'key_insights', 'open_questions']
 
 
 # ---------------------------------------------------------------------------

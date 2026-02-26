@@ -3,14 +3,15 @@
 Aruni CLI — called by the AI during learning sessions.
 
 Usage:
-  python3 aruni.py due <username>
-  python3 aruni.py add <username> <topic> <domain> <explanation> <question>
-  python3 aruni.py update <username> <row> <correct|wrong>
-  python3 aruni.py log <username> <domain> <topics_covered> <key_insights>
-  python3 aruni.py status <username>
+  python3 aruni.py due             <username>
+  python3 aruni.py add             <username> <topic> <domain> <explanation> <question>
+  python3 aruni.py update          <username> <row> <correct|wrong>
+  python3 aruni.py session-start   <username> <domain>
+  python3 aruni.py session-end     <username> <session_row> <topics_covered> <key_insights>
+  python3 aruni.py status          <username>
 """
 
-import os, sys, json
+import os, sys
 from datetime import datetime, timedelta
 
 ARUNI_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -65,9 +66,7 @@ def cmd_update(username, row_num, result):
     sh, ws = connect(username)
     row_num = int(row_num)
     row = ws.row_values(row_num)
-    # columns: topic(1) domain(2) explanation(3) questions(4) confidence(5)
-    #          last_reviewed(6) next_review(7) times_reviewed(8)
-    times = int(row[7]) + 1 if row[7] else 1
+    times = int(row[7]) + 1 if len(row) > 7 and row[7] else 1
     today = datetime.now().strftime('%Y-%m-%d')
     correct = result.lower().startswith('c')
 
@@ -76,7 +75,7 @@ def cmd_update(username, row_num, result):
         days = intervals.get(times, 30)
         if times >= 5:   confidence = 'High'
         elif times >= 3: confidence = 'Medium'
-        else:            confidence = row[4] if row[4] else 'Low'
+        else:            confidence = row[4] if len(row) > 4 and row[4] else 'Low'
     else:
         days = 1
         confidence = 'Low'
@@ -98,13 +97,46 @@ def cmd_add(username, topic, domain, explanation, question):
     print(f"Added: '{topic}' — next review tomorrow ({tomorrow})")
 
 
-def cmd_log(username, domain, topics_covered, key_insights):
-    """Log a learning session."""
+def cmd_session_start(username, domain):
+    """Log session start. Prints the session row number for use with session-end."""
     sh, ws = connect(username)
     sessions = sh.worksheet('sessions')
-    today = datetime.now().strftime('%Y-%m-%d')
-    sessions.append_row([username, today, domain, topics_covered, key_insights, ''])
-    print(f"Session logged for {username} on {today}")
+    now = datetime.now()
+    date     = now.strftime('%Y-%m-%d')
+    start_time = now.strftime('%H:%M')
+    # columns: user date start_time end_time duration_minutes domain concepts_covered key_insights open_questions
+    sessions.append_row([username, date, start_time, '', '', domain, '', '', ''])
+    all_rows = sessions.get_all_values()
+    session_row = len(all_rows)  # 1-based row number of the row just added
+    print(f"SESSION_START: row={session_row} time={start_time} date={date}")
+
+
+def cmd_session_end(username, session_row, topics_covered, key_insights):
+    """Complete a session log with end time, duration, and what was covered."""
+    sh, ws = connect(username)
+    sessions = sh.worksheet('sessions')
+    session_row = int(session_row)
+    row = sessions.row_values(session_row)
+
+    now = datetime.now()
+    end_time = now.strftime('%H:%M')
+
+    # Calculate duration from start_time in col 3 (index 2)
+    duration_minutes = ''
+    if len(row) >= 3 and row[2]:
+        try:
+            date_str = row[1] if len(row) > 1 and row[1] else now.strftime('%Y-%m-%d')
+            start_dt = datetime.strptime(f"{date_str} {row[2]}", '%Y-%m-%d %H:%M')
+            duration_minutes = int((now - start_dt).total_seconds() / 60)
+        except Exception:
+            pass
+
+    # cols: user(1) date(2) start_time(3) end_time(4) duration_minutes(5) domain(6) concepts_covered(7) key_insights(8) open_questions(9)
+    sessions.update_cell(session_row, 4, end_time)
+    sessions.update_cell(session_row, 5, duration_minutes)
+    sessions.update_cell(session_row, 7, topics_covered)
+    sessions.update_cell(session_row, 8, key_insights)
+    print(f"Session complete: {duration_minutes} min | topics: {topics_covered}")
 
 
 def cmd_status(username):
@@ -112,22 +144,23 @@ def cmd_status(username):
     sh, ws = connect(username)
     rows = ws.get_all_records()
     today = datetime.now().strftime('%Y-%m-%d')
-    due   = [r for r in rows if r.get('next_review') and str(r['next_review']) <= today]
-    high  = [r for r in rows if r.get('confidence') == 'High']
-    med   = [r for r in rows if r.get('confidence') == 'Medium']
-    low   = [r for r in rows if r.get('confidence') == 'Low']
-    print(f"Learner : {username}")
-    print(f"Total   : {len(rows)} concepts")
+    due  = [r for r in rows if r.get('next_review') and str(r['next_review']) <= today]
+    high = [r for r in rows if r.get('confidence') == 'High']
+    med  = [r for r in rows if r.get('confidence') == 'Medium']
+    low  = [r for r in rows if r.get('confidence') == 'Low']
+    print(f"Learner  : {username}")
+    print(f"Total    : {len(rows)} concepts")
     print(f"Due today: {len(due)}")
-    print(f"High    : {len(high)} | Medium: {len(med)} | Low: {len(low)}")
+    print(f"High     : {len(high)} | Medium: {len(med)} | Low: {len(low)}")
 
 
 COMMANDS = {
-    'due':    (cmd_due,    ['username']),
-    'update': (cmd_update, ['username', 'row', 'correct|wrong']),
-    'add':    (cmd_add,    ['username', 'topic', 'domain', 'explanation', 'question']),
-    'log':    (cmd_log,    ['username', 'domain', 'topics_covered', 'key_insights']),
-    'status': (cmd_status, ['username']),
+    'due':           (cmd_due,           ['username']),
+    'update':        (cmd_update,        ['username', 'row', 'correct|wrong']),
+    'add':           (cmd_add,           ['username', 'topic', 'domain', 'explanation', 'question']),
+    'session-start': (cmd_session_start, ['username', 'domain']),
+    'session-end':   (cmd_session_end,   ['username', 'session_row', 'topics_covered', 'key_insights']),
+    'status':        (cmd_status,        ['username']),
 }
 
 if __name__ == '__main__':
@@ -137,10 +170,9 @@ if __name__ == '__main__':
             print(f"  python3 aruni.py {cmd} {' '.join('<'+a+'>' for a in args)}")
         sys.exit(1)
 
-    cmd  = sys.argv[1]
+    cmd = sys.argv[1]
     fn, args = COMMANDS[cmd]
-    required = 2 + len(args)
-    if len(sys.argv) < required:
+    if len(sys.argv) < 2 + len(args):
         print(f"Usage: python3 aruni.py {cmd} {' '.join('<'+a+'>' for a in args)}")
         sys.exit(1)
 
