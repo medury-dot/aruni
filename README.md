@@ -1,7 +1,8 @@
 # Aruni Learning System
 
 *Developed by Ram Kalyan Medury, Founder & CEO, Maxiom Wealth (since 2016).
-IIT / IIM alumnus | ex-CIO ICICI | ex-Fintech Leader, Infosys.*
+IIT / IIM alumnus | ex-CIO ICICI | ex-Fintech Leader, Infosys.
+ram@maxiomwealth.com | +91-9550290118*
 
 ---
 

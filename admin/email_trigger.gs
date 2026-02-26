@@ -130,7 +130,7 @@ function buildReviewEmail(name, domain, todayDisplay, concepts) {
     '<p style="margin:0;">Open your LLM and say: <strong>"I\'m ready to review"</strong></p>' +
     '</div>' +
     '<hr style="border:none;border-top:1px solid #eee;margin:24px 0;">' +
-    '<p style="font-size:11px;color:#aaa;text-align:center;">Aruni Learning System &mdash; Developed by Ram Kalyan Medury, Founder &amp; CEO Maxiom Wealth (since 2016). IIT / IIM alumnus, ex-CIO ICICI, ex-Fintech Leader Infosys.</p>' +
+    '<p style="font-size:11px;color:#aaa;text-align:center;">Aruni Learning System &mdash; Developed by Ram Kalyan Medury, Founder &amp; CEO Maxiom Wealth (since 2016). IIT / IIM alumnus, ex-CIO ICICI, ex-Fintech Leader Infosys. ram@maxiomwealth.com | +91-9550290118</p>' +
     '</div>';
 }
 
@@ -170,6 +170,6 @@ function buildNoDueEmail(name, domain, todayDisplay) {
     '<li>Ask a question you have been curious about</li>' +
     '</ul>' +
     '</div>' +
-    '<p style="font-size:11px;color:#aaa;text-align:center;">Aruni Learning System &mdash; Developed by Ram Kalyan Medury, Founder &amp; CEO Maxiom Wealth (since 2016). IIT / IIM alumnus, ex-CIO ICICI, ex-Fintech Leader Infosys.</p>' +
+    '<p style="font-size:11px;color:#aaa;text-align:center;">Aruni Learning System &mdash; Developed by Ram Kalyan Medury, Founder &amp; CEO Maxiom Wealth (since 2016). IIT / IIM alumnus, ex-CIO ICICI, ex-Fintech Leader Infosys. ram@maxiomwealth.com | +91-9550290118</p>' +
     '</div>';
 }
