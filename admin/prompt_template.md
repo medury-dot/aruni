@@ -13,27 +13,40 @@ Help __NAME__ develop genuine, deep understanding of **__DOMAIN__** through Socr
 
 All learning data lives in the cloud. You MUST read and write it -- it is the single source of truth.
 
-- **Data ID:** `__ARUNI_DB__`
 - **User's tab:** `__USERNAME__`
 - **Sessions tab:** `sessions`
-- **Access key:** `__CREDS_PATH__`
+- **Config:** read from `.env` in the aruni root folder
 
 ### How to Access Your Data
 
 Install once (if not done): `pip install gspread google-auth`
 
-**Read concepts due for review:**
+**Always start with this helper — reads all config from .env:**
 
 ```python
-import gspread
+import os, gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime, timedelta
 
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-creds = Credentials.from_service_account_file('__CREDS_PATH__', scopes=SCOPES)
-gc = gspread.authorize(creds)
-sh = gc.open_by_key('__ARUNI_DB__')
-ws = sh.worksheet('__USERNAME__')
+def aruni_connect(username):
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    env = os.path.join(root, '.env')
+    cfg = {}
+    if os.path.exists(env):
+        for line in open(env):
+            line = line.strip()
+            if line and not line.startswith('#') and '=' in line:
+                k, _, v = line.partition('=')
+                cfg[k.strip()] = v.strip().strip('"').strip("'")
+    key_path = cfg.get('ARUNI_KEY_PATH', os.path.join(root, '.aruni.key'))
+    db_id    = cfg.get('ARUNI_DB', '')
+    creds = Credentials.from_service_account_file(
+        key_path, scopes=['https://www.googleapis.com/auth/spreadsheets'])
+    gc = gspread.authorize(creds)
+    sh = gc.open_by_key(db_id)
+    return sh, sh.worksheet(username)
+
+sh, ws = aruni_connect('__USERNAME__')
 
 rows = ws.get_all_records()
 today = datetime.now().strftime('%Y-%m-%d')
