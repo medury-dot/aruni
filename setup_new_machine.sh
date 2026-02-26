@@ -35,22 +35,20 @@ echo "  OK: gspread and google-auth installed"
 echo ""
 echo "[ 3/4 ] Checking Google credentials..."
 if [ ! -f "$CREDS_FILE" ]; then
+    if [ ! -f "$ARUNI_DIR/google_creds.json.enc" ]; then
+        echo "  ERROR: google_creds.json.enc not found. Re-clone the repo and try again."
+        exit 1
+    fi
     echo ""
-    echo "  google_creds.json not found."
+    echo "  Enter the Aruni password (get it from whoever set up this system):"
+    read -s -p "  Password: " ARUNI_PASSWORD
     echo ""
-    echo "  You need the service account key file."
-    echo "  Get it from whoever manages the Aruni system"
-    echo "  and copy it to:"
-    echo ""
-    echo "    $CREDS_FILE"
-    echo ""
-    read -p "  Press Enter once you have copied the file..." _
+    python3 "$ARUNI_DIR/encrypt_creds.py" "$ARUNI_PASSWORD"
     if [ ! -f "$CREDS_FILE" ]; then
-        echo "  ERROR: File still not found. Exiting."
         exit 1
     fi
 fi
-echo "  OK: google_creds.json found"
+echo "  OK: Access granted!"
 
 # ── 4. .env file ─────────────────────────────────────────────────────────────
 echo ""
