@@ -74,7 +74,7 @@ if not exist "%CREDS_FILE%" (
     )
     echo.
     set /p ARUNI_PASSWORD="  Enter Aruni password (get it from whoever set up this system): "
-    python "%ARUNI_DIR%encrypt_creds.py" "%ARUNI_PASSWORD%"
+    python "%ARUNI_DIR%admin\encrypt_creds.py" "%ARUNI_PASSWORD%"
     if errorlevel 1 (
         pause
         exit /b 1
@@ -241,7 +241,7 @@ echo ------------------------------------------------------------------
 echo.
 echo   python setup.py add-user         Add a new learner
 echo   python setup.py status           Check system status
-echo   python daily_email.py            Send today's review email now
+echo   python admin\daily_email.py      Send today's review email now
 echo.
 echo   Things to say to Aruni during a session:
 echo     'I'm ready to learn'    -- start a new topic

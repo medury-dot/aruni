@@ -120,25 +120,26 @@ An automated script runs inside the data store at 7 AM daily — no laptop, no c
 
 ```
 aruni/
-├── setup.py                  Main CLI (init, add-user, status, migrate)
-├── setup_new_machine.sh      One-time setup for Mac/Linux
-├── setup_new_machine.bat     One-time setup for Windows
-├── encrypt_creds.py          Encrypt/decrypt access credentials (admin only)
-├── daily_email.py            Python fallback for daily emails
-├── email_trigger.gs          Automated daily email script
-├── prompt_template.md        Universal teaching prompt template
-├── requirements.txt          Python dependencies
-├── .env.example              Environment variable template
+├── setup.py                  Main CLI (add-user, status, regenerate)
+├── setup_new_machine.sh      One-time setup — Mac/Linux
+├── setup_new_machine.bat     One-time setup — Windows
 ├── .aruni.key.enc            Encrypted access bundle (safe to commit)
-└── users/
-    ├── varnika/
-    │   ├── CLAUDE.md         Prompt for Claude Code
-    │   ├── GEMINI.md         Prompt for Gemini CLI
-    │   └── AGENTS.md         Prompt for OpenAI Codex
-    └── ram/
-        ├── CLAUDE.md
-        ├── GEMINI.md
-        └── AGENTS.md
+├── .env.example              Config template (auto-filled during setup)
+├── users/
+│   ├── varnika/
+│   │   ├── CLAUDE.md         Prompt for Claude Code
+│   │   ├── GEMINI.md         Prompt for Gemini CLI
+│   │   └── AGENTS.md         Prompt for OpenAI Codex
+│   └── ram/
+│       ├── CLAUDE.md
+│       ├── GEMINI.md
+│       └── AGENTS.md
+└── admin/                    Admin tools (not needed by learners)
+    ├── encrypt_creds.py      Re-encrypt credentials
+    ├── daily_email.py        Send review emails manually
+    ├── email_trigger.gs      Google Apps Script for daily emails
+    ├── prompt_template.md    Template for user prompt files
+    └── requirements.txt      Python dependencies
 ```
 
 ---

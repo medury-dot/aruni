@@ -19,7 +19,8 @@ import base64
 import hashlib
 import getpass
 
-ARUNI_DIR = os.path.dirname(os.path.abspath(__file__))
+ADMIN_DIR  = os.path.dirname(os.path.abspath(__file__))
+ARUNI_DIR  = os.path.dirname(ADMIN_DIR)   # parent = repo root
 CREDS_FILE = os.path.join(ARUNI_DIR, '.aruni.key')
 ENC_FILE   = os.path.join(ARUNI_DIR, '.aruni.key.enc')
 ENV_FILE   = os.path.join(ARUNI_DIR, '.env')

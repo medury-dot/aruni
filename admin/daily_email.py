@@ -16,7 +16,8 @@ from email.mime.multipart import MIMEMultipart
 from email.utils import formataddr
 from datetime import datetime
 
-ARUNI_DIR = os.path.dirname(os.path.abspath(__file__))
+ADMIN_DIR = os.path.dirname(os.path.abspath(__file__))
+ARUNI_DIR = os.path.dirname(ADMIN_DIR)   # parent = repo root
 
 def load_env():
     env_path = os.path.join(ARUNI_DIR, '.env')

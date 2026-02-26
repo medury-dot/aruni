@@ -68,7 +68,7 @@ if [ ! -f "$CREDS_FILE" ]; then
     echo "  Enter the Aruni password (get it from whoever set up this system):"
     read -s -p "  Password: " ARUNI_PASSWORD
     echo ""
-    python3 "$ARUNI_DIR/encrypt_creds.py" "$ARUNI_PASSWORD"
+    python3 "$ARUNI_DIR/admin/encrypt_creds.py" "$ARUNI_PASSWORD"
     if [ ! -f "$CREDS_FILE" ]; then
         exit 1
     fi
@@ -246,7 +246,7 @@ echo "────────────────────────�
 echo ""
 echo "  python3 setup.py add-user         Add a new learner"
 echo "  python3 setup.py status           Check system status"
-echo "  python3 daily_email.py            Send today's review email now"
+echo "  python3 admin/daily_email.py      Send today's review email now"
 echo ""
 echo "  Things to say to Aruni during a session:"
 echo "    'I'm ready to learn'    →  start a new topic"
