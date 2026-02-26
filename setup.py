@@ -5,7 +5,7 @@ Aruni Learning System - Setup Script
 Named after Uddalaka Aruni, the Vedic sage who taught through questions.
 
 Commands:
-    python3 setup.py init              Create Google Sheet and folder structure
+    python3 setup.py init              Initialize data store and folder structure
     python3 setup.py add-user          Add a new learner (interactive)
     python3 setup.py regenerate USER   Re-generate prompt files for a user
     python3 setup.py status            Show all users and their learning stats
@@ -87,27 +87,16 @@ def get_gspread_client():
     from google.oauth2.service_account import Credentials
     import gspread
 
-    creds_path = os.environ.get('GOOGLE_CREDS_PATH', os.path.join(ARUNI_DIR, 'google_creds.json'))
+    creds_path = os.environ.get('ARUNI_KEY_PATH', os.path.join(ARUNI_DIR, '.aruni.key'))
     # Resolve relative paths from ARUNI_DIR
     if not os.path.isabs(creds_path):
         creds_path = os.path.join(ARUNI_DIR, creds_path)
 
     if not os.path.exists(creds_path):
-        print(f"ERROR: Google credentials not found at: {creds_path}")
+        print(f"ERROR: Access credentials not found at: {creds_path}")
         print()
-        print("=== One-time Google Cloud setup (5 minutes) ===")
-        print()
-        print("1. Go to https://console.cloud.google.com")
-        print("2. Create a project (or pick an existing one)")
-        print("3. Search for 'Google Sheets API' -> Enable it")
-        print("4. Search for 'Google Drive API' -> Enable it")
-        print("5. Go to 'APIs & Services' > 'Credentials'")
-        print("6. Click 'Create Credentials' > 'Service Account'")
-        print("7. Name it 'aruni', click through, done")
-        print("8. Click the service account > 'Keys' tab > 'Add Key' > JSON")
-        print(f"9. Save the downloaded file as: {os.path.join(ARUNI_DIR, 'google_creds.json')}")
-        print()
-        print("Then re-run this command.")
+        print("Run setup_new_machine.sh (Mac/Linux) or setup_new_machine.bat (Windows)")
+        print("and enter the Aruni password when prompted.")
         sys.exit(1)
 
     creds = Credentials.from_service_account_file(creds_path, scopes=SCOPES)
@@ -115,11 +104,11 @@ def get_gspread_client():
 
 
 def get_sheet():
-    """Get the Aruni Google Sheet"""
+    """Get the Aruni data store"""
     gc, _ = get_gspread_client()
-    sheet_id = os.environ.get('SHEET_ID')
+    sheet_id = os.environ.get('ARUNI_DB')
     if not sheet_id:
-        print("ERROR: No SHEET_ID in .env. Run 'python3 setup.py init' first.")
+        print("ERROR: No ARUNI_DB in .env. Run 'python3 setup.py init' first.")
         sys.exit(1)
     return gc.open_by_key(sheet_id)
 
@@ -138,7 +127,7 @@ def read_config_tab(sh):
 # ---------------------------------------------------------------------------
 
 def cmd_init():
-    """Create Google Sheet with config and sessions tabs"""
+    """Create data store with config and sessions tabs"""
     load_env()
 
     if not check_dependencies():
@@ -147,7 +136,7 @@ def cmd_init():
     import gspread
 
     gc, creds_path = get_gspread_client()
-    sheet_id = os.environ.get('SHEET_ID')
+    sheet_id = os.environ.get('ARUNI_DB')
 
     if sheet_id:
         print(f"Sheet already exists: https://docs.google.com/spreadsheets/d/{sheet_id}")
@@ -156,13 +145,13 @@ def cmd_init():
             print(f"Title: {sh.title}")
         except Exception as e:
             print(f"WARNING: Could not open sheet: {e}")
-            print("Check SHEET_ID in .env or delete it and re-run init.")
+            print("Check ARUNI_DB in .env or delete it and re-run init.")
             sys.exit(1)
     else:
-        print("Creating Google Sheet: 'Aruni Learning System'...")
+        print("Creating data store: 'Aruni Learning System'...")
         sh = gc.create('Aruni Learning System')
         sheet_id = sh.id
-        save_env_var('SHEET_ID', sheet_id)
+        save_env_var('ARUNI_DB', sheet_id)
         print(f"Created! ID: {sheet_id}")
 
     # Ensure config tab
@@ -278,8 +267,8 @@ def cmd_add_user():
             print(f"  Please share the sheet manually with {email}")
 
     # Generate prompt files
-    sheet_id = os.environ.get('SHEET_ID')
-    creds_path = os.environ.get('GOOGLE_CREDS_PATH', os.path.join(ARUNI_DIR, 'google_creds.json'))
+    sheet_id = os.environ.get('ARUNI_DB')
+    creds_path = os.environ.get('ARUNI_KEY_PATH', os.path.join(ARUNI_DIR, '.aruni.key'))
     if not os.path.isabs(creds_path):
         creds_path = os.path.join(ARUNI_DIR, creds_path)
 
@@ -304,7 +293,7 @@ def cmd_add_user():
     print()
     print(f'  Then just say: "I\'m ready to review" or "Teach me something new"')
     print()
-    sheet_id = os.environ.get('SHEET_ID')
+    sheet_id = os.environ.get('ARUNI_DB')
     print(f"  Sheet: https://docs.google.com/spreadsheets/d/{sheet_id}")
 
 
@@ -326,7 +315,7 @@ def generate_prompts(username, name, domain, goal, custom_instructions, sheet_id
         .replace('__USERNAME__', username)
         .replace('__DOMAIN__', domain)
         .replace('__GOAL__', goal)
-        .replace('__SHEET_ID__', sheet_id or 'NOT_SET')
+        .replace('__ARUNI_DB__', sheet_id or 'NOT_SET')
         .replace('__CREDS_PATH__', creds_path)
         .replace('__CUSTOM_INSTRUCTIONS__', custom_block))
 
@@ -360,8 +349,8 @@ def cmd_regenerate(username):
         print(f"Available users: {', '.join(u.get('user', '?') for u in users)}")
         sys.exit(1)
 
-    sheet_id = os.environ.get('SHEET_ID')
-    creds_path = os.environ.get('GOOGLE_CREDS_PATH', os.path.join(ARUNI_DIR, 'google_creds.json'))
+    sheet_id = os.environ.get('ARUNI_DB')
+    creds_path = os.environ.get('ARUNI_KEY_PATH', os.path.join(ARUNI_DIR, '.aruni.key'))
     if not os.path.isabs(creds_path):
         creds_path = os.path.join(ARUNI_DIR, creds_path)
 
@@ -394,7 +383,7 @@ def cmd_status():
         print("No users found. Run 'python3 setup.py add-user' first.")
         return
 
-    sheet_id = os.environ.get('SHEET_ID')
+    sheet_id = os.environ.get('ARUNI_DB')
     print(f"Sheet: https://docs.google.com/spreadsheets/d/{sheet_id}")
     print()
     print(f"{'User':<15} {'Domain':<30} {'Total':<7} {'Due':<5} {'Low':<5} {'Med':<5} {'High':<5}")
@@ -477,7 +466,7 @@ def print_help():
     print("Aruni Learning System - Setup")
     print()
     print("Usage:")
-    print("  python3 setup.py init                  Create Google Sheet (first time)")
+    print("  python3 setup.py init                  Create data store (first time)")
     print("  python3 setup.py add-user              Add a new learner (interactive)")
     print("  python3 setup.py regenerate <user>     Re-generate prompt files")
     print("  python3 setup.py status                Show all users and stats")

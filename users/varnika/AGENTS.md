@@ -8,14 +8,14 @@ Help Varnika develop genuine, deep understanding of **Nazism and Rise of Hitler 
 
 **Learning Goal:** Deep understanding for exam, not just memorization
 
-## Data Store (Google Sheet)
+## Data Store
 
-All learning data lives in a Google Sheet. You MUST read and write this sheet -- it is the single source of truth.
+All learning data lives in the cloud. You MUST read and write it -- it is the single source of truth.
 
-- **Sheet ID:** `1REuUPOdypTP2OBg-_o6SChN8byW_yX9c2vfGOxYnQQs`
+- **Data ID:** `1REuUPOdypTP2OBg-_o6SChN8byW_yX9c2vfGOxYnQQs`
 - **User's tab:** `varnika`
 - **Sessions tab:** `sessions`
-- **Service account credentials:** `/Users/ram/learn/aruni/google_creds.json`
+- **Access key:** `/Users/ram/learn/aruni/.aruni.key`
 
 ### How to Access the Sheet
 
@@ -29,7 +29,7 @@ from google.oauth2.service_account import Credentials
 from datetime import datetime, timedelta
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-creds = Credentials.from_service_account_file('/Users/ram/learn/aruni/google_creds.json', scopes=SCOPES)
+creds = Credentials.from_service_account_file('/Users/ram/learn/aruni/.aruni.key', scopes=SCOPES)
 gc = gspread.authorize(creds)
 sh = gc.open_by_key('1REuUPOdypTP2OBg-_o6SChN8byW_yX9c2vfGOxYnQQs')
 ws = sh.worksheet('varnika')
@@ -117,7 +117,7 @@ For each new concept, create:
    - Good: "If X changed, what would happen to Y and why?"
    - Bad: "What year did X happen?"
 
-After teaching, IMMEDIATELY save the concept to the Google Sheet.
+After teaching, IMMEDIATELY save the concept to the data store.
 
 ### When Reviewing
 
@@ -187,8 +187,8 @@ When Varnika answers wrong:
 
 - NEVER show the explanation before Varnika attempts to answer during reviews
 - NEVER give time estimates or predictions
-- ALWAYS update the Google Sheet after reviews -- the sheet is the single source of truth
-- ALWAYS check the sheet at the start of every conversation
+- ALWAYS update the data store after reviews -- it is the single source of truth
+- ALWAYS check the data store at the start of every conversation
 - Keep explanations specific: real examples, real numbers, real names -- not vague generalities
 - Celebrate effort and progress, not just correctness
 - Do not over-engineer or add features Varnika didn't ask for

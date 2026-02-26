@@ -2,7 +2,7 @@
 """
 Aruni Daily Email - Sends review reminders to all users.
 
-Reads the Google Sheet, finds concepts due for review, sends HTML emails.
+Reads learning data, finds concepts due for review, sends HTML emails.
 Run manually:  python3 daily_email.py
 Run for one:   python3 daily_email.py varnika
 """
@@ -38,12 +38,12 @@ def get_sheet():
     import gspread
     from google.oauth2.service_account import Credentials
     scopes = ['https://www.googleapis.com/auth/spreadsheets']
-    creds_path = os.environ.get('GOOGLE_CREDS_PATH', os.path.join(ARUNI_DIR, 'google_creds.json'))
+    creds_path = os.environ.get('ARUNI_KEY_PATH', os.path.join(ARUNI_DIR, '.aruni.key'))
     if not os.path.isabs(creds_path):
         creds_path = os.path.join(ARUNI_DIR, creds_path)
     creds = Credentials.from_service_account_file(creds_path, scopes=scopes)
     gc = gspread.authorize(creds)
-    return gc.open_by_key(os.environ['SHEET_ID'])
+    return gc.open_by_key(os.environ['ARUNI_DB'])
 
 
 def get_due_concepts(sh, username):

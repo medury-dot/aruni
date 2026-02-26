@@ -1,10 +1,10 @@
 /**
  * Aruni Learning System - Daily Email Trigger
  *
- * This runs INSIDE the Google Sheet. No Python, no cron, no laptop needed.
+ * This runs inside the Aruni data store. No Python, no cron, no laptop needed.
  *
  * SETUP (one time, 2 minutes):
- *   1. Open the Aruni Google Sheet
+ *   1. Open the Aruni data store
  *   2. Extensions > Apps Script
  *   3. Delete any existing code, paste this entire file
  *   4. Click Save
@@ -20,7 +20,7 @@
  * TEST: Click Run > sendDailyEmails to send a test email now.
  */
 
-// SHEET ID - change this if you create a new sheet
+// Data store reference (admin-managed)
 var ARUNI_SHEET_ID = '1REuUPOdypTP2OBg-_o6SChN8byW_yX9c2vfGOxYnQQs';
 
 function sendDailyEmails() {
@@ -130,7 +130,7 @@ function buildReviewEmail(name, domain, todayDisplay, concepts) {
     '<p style="margin:0;">Open your LLM and say: <strong>"I\'m ready to review"</strong></p>' +
     '</div>' +
     '<hr style="border:none;border-top:1px solid #eee;margin:24px 0;">' +
-    '<p style="font-size:11px;color:#aaa;text-align:center;">Aruni Learning System</p>' +
+    '<p style="font-size:11px;color:#aaa;text-align:center;">Aruni Learning System &mdash; Developed by Ram Kalyan Medury, Founder &amp; CEO Maxiom Wealth (since 2016). IIT / IIM alumnus, ex-CIO ICICI, ex-Fintech Leader Infosys.</p>' +
     '</div>';
 }
 
@@ -170,6 +170,6 @@ function buildNoDueEmail(name, domain, todayDisplay) {
     '<li>Ask a question you have been curious about</li>' +
     '</ul>' +
     '</div>' +
-    '<p style="font-size:11px;color:#aaa;text-align:center;">Aruni Learning System</p>' +
+    '<p style="font-size:11px;color:#aaa;text-align:center;">Aruni Learning System &mdash; Developed by Ram Kalyan Medury, Founder &amp; CEO Maxiom Wealth (since 2016). IIT / IIM alumnus, ex-CIO ICICI, ex-Fintech Leader Infosys.</p>' +
     '</div>';
 }

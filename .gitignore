@@ -1,5 +1,6 @@
+.aruni.key
+!.aruni.key.enc
 google_creds.json
-!google_creds.json.enc
 .env
 __pycache__/
 *.pyc
