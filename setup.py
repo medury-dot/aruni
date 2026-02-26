@@ -310,13 +310,13 @@ def generate_prompts(username, name, domain, goal, custom_instructions, sheet_id
     if custom_instructions:
         custom_block = f"\n## Domain-Specific Instructions\n\n{custom_instructions}\n"
 
+    aruni_py = os.path.join(ARUNI_DIR, 'aruni.py')
     rendered = (template
         .replace('__NAME__', name)
         .replace('__USERNAME__', username)
         .replace('__DOMAIN__', domain)
         .replace('__GOAL__', goal)
-        .replace('__ARUNI_DB__', sheet_id or 'NOT_SET')
-        .replace('__CREDS_PATH__', creds_path)
+        .replace('__ARUNI_PY__', aruni_py)
         .replace('__CUSTOM_INSTRUCTIONS__', custom_block))
 
     # Write all three variants (same content, different filenames)

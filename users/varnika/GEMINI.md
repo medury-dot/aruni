@@ -14,88 +14,36 @@ Help Varnika develop genuine, deep understanding of **Nazism and Rise of Hitler 
 All learning data lives in the cloud. You MUST read and write it -- it is the single source of truth.
 
 - **User's tab:** `varnika`
-- **Sessions tab:** `sessions`
-- **Config:** read from `.env` in the aruni root folder
+- **Helper script:** `/Users/ram/learn/aruni/aruni.py`
 
 ### How to Access Your Data
 
-Install once (if not done): `pip install gspread google-auth`
+All data operations use a single helper script. Call it with simple shell commands — no inline code needed.
 
-**Always start with this helper — reads all config from .env:**
-
-```python
-import os, gspread
-from google.oauth2.service_account import Credentials
-from datetime import datetime, timedelta
-
-def aruni_connect(username):
-    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    env = os.path.join(root, '.env')
-    cfg = {}
-    if os.path.exists(env):
-        for line in open(env):
-            line = line.strip()
-            if line and not line.startswith('#') and '=' in line:
-                k, _, v = line.partition('=')
-                cfg[k.strip()] = v.strip().strip('"').strip("'")
-    key_path = cfg.get('ARUNI_KEY_PATH', os.path.join(root, '.aruni.key'))
-    db_id    = cfg.get('ARUNI_DB', '')
-    creds = Credentials.from_service_account_file(
-        key_path, scopes=['https://www.googleapis.com/auth/spreadsheets'])
-    gc = gspread.authorize(creds)
-    sh = gc.open_by_key(db_id)
-    return sh, sh.worksheet(username)
-
-sh, ws = aruni_connect('varnika')
-
-rows = ws.get_all_records()
-today = datetime.now().strftime('%Y-%m-%d')
-due = [r for r in rows if r.get('next_review') and str(r['next_review']) <= today]
-print(f"{len(due)} concepts due for review today")
-for r in due:
-    print(f"  - {r['topic']} [{r['confidence']}] Q: {r['questions']}")
+**At the start of every session — check what is due:**
+```
+python3 /Users/ram/learn/aruni/aruni.py due varnika
 ```
 
-**Update after review (correct or wrong):**
-
-```python
-# row_index = position in get_all_records() (0-based), sheet row = row_index + 2
-row_num = row_index + 2
-today = datetime.now().strftime('%Y-%m-%d')
-times = current_times_reviewed + 1
-
-# Spaced repetition intervals
-if correct:
-    intervals = {1: 1, 2: 3, 3: 7, 4: 14}
-    days = intervals.get(times, 30)
-    if times >= 5: confidence = 'High'
-    elif times >= 3: confidence = 'Medium'
-    else: confidence = current_confidence
-else:
-    days = 1
-    confidence = 'Low'
-
-next_date = (datetime.now() + timedelta(days=days)).strftime('%Y-%m-%d')
-
-ws.update_cell(row_num, 5, confidence)       # E: confidence
-ws.update_cell(row_num, 6, today)            # F: last_reviewed
-ws.update_cell(row_num, 7, next_date)        # G: next_review
-ws.update_cell(row_num, 8, times)            # H: times_reviewed
+**After teaching a new concept:**
+```
+python3 /Users/ram/learn/aruni/aruni.py add varnika "topic" "domain" "explanation" "question"
 ```
 
-**Add a new concept after teaching:**
-
-```python
-today = datetime.now().strftime('%Y-%m-%d')
-tomorrow = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
-ws.append_row([topic, domain, explanation, question, 'Low', today, tomorrow, 0])
+**After a review — mark correct or wrong (use row number from `due` output):**
+```
+python3 /Users/ram/learn/aruni/aruni.py update varnika <row> correct
+python3 /Users/ram/learn/aruni/aruni.py update varnika <row> wrong
 ```
 
-**Log a learning session:**
+**At end of session — log what was covered:**
+```
+python3 /Users/ram/learn/aruni/aruni.py log varnika "domain" "topics covered" "key insights"
+```
 
-```python
-sessions = sh.worksheet('sessions')
-sessions.append_row(['varnika', today, 'Nazism and Rise of Hitler (NCERT Grade 9)', 'Topics covered', 'Key insights', ''])
+**Check progress summary:**
+```
+python3 /Users/ram/learn/aruni/aruni.py status varnika
 ```
 
 ### Column Reference
