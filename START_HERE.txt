@@ -1,0 +1,67 @@
+======================================================================
+  ARUNI LEARNING SYSTEM
+  Developed by Ram Kalyan Medury, Founder & CEO, Maxiom Wealth
+  IIT / IIM alumnus | ex-CIO ICICI | ex-Fintech Leader, Infosys
+======================================================================
+
+Welcome! Follow the steps below for your operating system.
+The whole setup takes about 5 minutes.
+
+You will need:
+  - The Aruni password (ask whoever sent you this file)
+  - Internet connection
+
+----------------------------------------------------------------------
+  MAC / LINUX
+----------------------------------------------------------------------
+
+1. Open Terminal
+
+2. Go to this folder:
+      cd ~/Downloads/aruni
+
+3. Run setup:
+      bash setup_new_machine.sh
+
+4. Enter the Aruni password when asked.
+
+5. Done! The script will guide you through everything.
+
+----------------------------------------------------------------------
+  WINDOWS
+----------------------------------------------------------------------
+
+1. Open Command Prompt (search "cmd" in Start menu)
+
+2. Go to this folder:
+      cd %USERPROFILE%\Downloads\aruni
+
+3. Run setup:
+      setup_new_machine.bat
+
+4. Enter the Aruni password when asked.
+
+5. Done! The script will guide you through everything.
+
+----------------------------------------------------------------------
+  AFTER SETUP — DAILY USE
+----------------------------------------------------------------------
+
+Every day, just open Terminal / Command Prompt and type:
+
+   Mac/Linux:   cd ~/Downloads/aruni/users/<your-name> && claude
+   Windows:     cd %USERPROFILE%\Downloads\aruni\users\<your-name> && claude
+
+Replace "claude" with "gemini" or "codex" if you chose a different AI.
+
+Then just say:  "I'm ready to learn"
+
+----------------------------------------------------------------------
+  NEED HELP?
+----------------------------------------------------------------------
+
+  - Forgot the password?  Ask whoever sent you this file.
+  - Something not working?  Re-run the setup script.
+  - Want to read the full guide?  Open README.md in this folder.
+
+======================================================================
