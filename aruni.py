@@ -66,8 +66,11 @@ def cmd_update(username, row_num, result):
     sh, ws = connect(username)
     row_num = int(row_num)
     row = ws.row_values(row_num)
-    times = int(row[7]) + 1 if len(row) > 7 and row[7] else 1
-    today = datetime.now().strftime('%Y-%m-%d')
+    # cols: topic(1) domain(2) explanation(3) questions(4) confidence(5)
+    #       created_at(6) last_reviewed(7) next_review(8) times_reviewed(9)
+    times = int(row[8]) + 1 if len(row) > 8 and row[8] else 1
+    now = datetime.now()
+    last_reviewed = now.strftime('%Y-%m-%d %H:%M')
     correct = result.lower().startswith('c')
 
     if correct:
@@ -80,20 +83,22 @@ def cmd_update(username, row_num, result):
         days = 1
         confidence = 'Low'
 
-    next_date = (datetime.now() + timedelta(days=days)).strftime('%Y-%m-%d')
+    next_date = (now + timedelta(days=days)).strftime('%Y-%m-%d')
     ws.update_cell(row_num, 5, confidence)
-    ws.update_cell(row_num, 6, today)
-    ws.update_cell(row_num, 7, next_date)
-    ws.update_cell(row_num, 8, times)
+    ws.update_cell(row_num, 7, last_reviewed)
+    ws.update_cell(row_num, 8, next_date)
+    ws.update_cell(row_num, 9, times)
     print(f"Updated row {row_num}: confidence={confidence}, next_review={next_date} (+{days}d), reviews={times}")
 
 
 def cmd_add(username, topic, domain, explanation, question):
     """Add a new concept."""
     sh, ws = connect(username)
-    today    = datetime.now().strftime('%Y-%m-%d')
-    tomorrow = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
-    ws.append_row([topic, domain, explanation, question, 'Low', today, tomorrow, 0])
+    now      = datetime.now()
+    created  = now.strftime('%Y-%m-%d %H:%M')
+    tomorrow = (now + timedelta(days=1)).strftime('%Y-%m-%d')
+    # cols: topic domain explanation questions confidence created_at last_reviewed next_review times_reviewed
+    ws.append_row([topic, domain, explanation, question, 'Low', created, '', tomorrow, 0])
     print(f"Added: '{topic}' — next review tomorrow ({tomorrow})")
 
 

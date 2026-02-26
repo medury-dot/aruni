@@ -27,8 +27,8 @@ SCOPES = [
     'https://www.googleapis.com/auth/drive'
 ]
 
-CONFIG_HEADERS = ['user', 'name', 'email', 'domain', 'learning_goal', 'start_date', 'custom_instructions']
-KB_HEADERS = ['topic', 'domain', 'explanation', 'questions', 'confidence', 'last_reviewed', 'next_review', 'times_reviewed']
+CONFIG_HEADERS = ['user', 'name', 'email', 'domain', 'learning_goal', 'joined_at', 'custom_instructions']
+KB_HEADERS = ['topic', 'domain', 'explanation', 'questions', 'confidence', 'created_at', 'last_reviewed', 'next_review', 'times_reviewed']
 SESSIONS_HEADERS = ['user', 'date', 'start_time', 'end_time', 'duration_minutes', 'domain', 'concepts_covered', 'key_insights', 'open_questions']
 
 
@@ -241,11 +241,11 @@ def cmd_add_user():
     print("            'Focus on problem-solving, not theory'")
     custom = input("  Custom instructions (press Enter to skip): ").strip()
 
-    start_date = datetime.now().strftime('%Y-%m-%d')
+    joined_at = datetime.now().strftime('%Y-%m-%d %H:%M')
 
     # Add to config tab
     config_ws = sh.worksheet('config')
-    config_ws.append_row([username, name, email, domain, goal, start_date, custom])
+    config_ws.append_row([username, name, email, domain, goal, joined_at, custom])
     print(f"  Added {username} to config tab")
 
     # Create user tab

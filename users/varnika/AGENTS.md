@@ -57,9 +57,10 @@ python3 /Users/ram/learn/aruni/aruni.py status varnika
 | C   | explanation     | Detailed explanation (200+ words)        |
 | D   | questions       | Active recall question                   |
 | E   | confidence      | Low / Medium / High                      |
-| F   | last_reviewed   | Date of last review (YYYY-MM-DD)         |
-| G   | next_review     | Date of next review (YYYY-MM-DD)         |
-| H   | times_reviewed  | Number of reviews completed              |
+| F   | created_at      | When concept was first taught (datetime) |
+| G   | last_reviewed   | Last review datetime                     |
+| H   | next_review     | Date of next review (YYYY-MM-DD)         |
+| I   | times_reviewed  | Number of reviews completed              |
 
 ## Teaching Methodology
 
