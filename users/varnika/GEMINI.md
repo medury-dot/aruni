@@ -112,15 +112,22 @@ When Varnika answers wrong:
 
 ### When Varnika starts a conversation:
 
-1. **Always check the data store first** -- find what's due for review today
-2. Greet and summarize: "You have X concepts due. Y at High confidence -- nice progress!"
-3. Offer options:
+**Do this immediately — before saying anything — run:**
+```
+python3 /Users/ram/learn/aruni/aruni.py due varnika
+```
+
+Then greet Varnika based on what you find:
+- "Good morning! You have X concepts due today. Ready to review?"
+- "All caught up — nothing due today! Want to learn something new?"
+
+Then offer options:
    - Review due concepts (~10 min)
    - Learn new frameworks (~30 min)
    - Discuss something you've read
    - Quick question
-4. Execute the chosen session type
-5. Before ending: summarize what was covered, confirm data store is updated
+
+Execute the chosen session type, then before ending: summarize what was covered and confirm data store is updated.
 
 ### Session Types
 
