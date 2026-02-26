@@ -278,11 +278,39 @@ echo.
 if "%AI_READY%"=="true" if not "%AI_CMD%"=="" (
     set /p LAUNCH_NOW="  Launch %AI_CMD% now? [y/n]: "
     echo.
-    if /i "%LAUNCH_NOW%"=="y" (
-        echo   Starting %AI_CMD%...
-        echo   (Say 'I'm ready to learn' to begin)
-        echo.
-        start %AI_CMD%
+    if /i "!LAUNCH_NOW!"=="y" (
+
+        :: Check for existing users
+        set USER_COUNT=0
+        set LAUNCH_USER=
+        for /d %%d in ("%ARUNI_DIR%users\*") do (
+            set /a USER_COUNT+=1
+            set LAUNCH_USER=%%~nd
+        )
+
+        if !USER_COUNT!==0 (
+            echo   No learners found. Let's add you first.
+            echo.
+            python "%ARUNI_DIR%setup.py" add-user
+            echo.
+            for /d %%d in ("%ARUNI_DIR%users\*") do (
+                set /a USER_COUNT+=1
+                set LAUNCH_USER=%%~nd
+            )
+        )
+
+        if !USER_COUNT! gtr 1 (
+            echo   Who are you? Enter your username:
+            set /p LAUNCH_USER="  Username: "
+        )
+
+        if not "!LAUNCH_USER!"=="" (
+            echo.
+            echo   Starting %AI_CMD% as !LAUNCH_USER!...
+            echo   (Say 'I'm ready to learn' to begin)
+            echo.
+            cd "%ARUNI_DIR%users\!LAUNCH_USER!" && %AI_CMD%
+        )
     ) else (
         echo   When ready, run:  cd users\^<your-name^> ^&^& %AI_CMD%
         echo.

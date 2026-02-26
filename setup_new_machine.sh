@@ -287,15 +287,52 @@ if [ "$AI_READY" = true ] && [ -n "$AI_CMD" ]; then
     read -p "  Launch $AI_CMD now? [y/n]: " LAUNCH_NOW
     echo ""
     if [ "$LAUNCH_NOW" = "y" ] || [ "$LAUNCH_NOW" = "Y" ]; then
-        echo "  Starting $AI_CMD..."
-        echo "  (Say 'I'm ready to learn' to begin)"
-        echo ""
-        exec "$AI_CMD"
+
+        # Find existing users
+        USERS_DIR="$ARUNI_DIR/users"
+        USER_LIST=()
+        if [ -d "$USERS_DIR" ]; then
+            for d in "$USERS_DIR"/*/; do
+                [ -d "$d" ] && USER_LIST+=("$(basename "$d")")
+            done
+        fi
+
+        if [ ${#USER_LIST[@]} -eq 0 ]; then
+            # No users yet — run add-user first
+            echo "  No learners found. Let's add you first."
+            echo ""
+            python3 "$ARUNI_DIR/setup.py" add-user
+            echo ""
+            # Re-scan after add
+            for d in "$USERS_DIR"/*/; do
+                [ -d "$d" ] && USER_LIST+=("$(basename "$d")")
+            done
+        fi
+
+        if [ ${#USER_LIST[@]} -eq 1 ]; then
+            LAUNCH_USER="${USER_LIST[0]}"
+        elif [ ${#USER_LIST[@]} -gt 1 ]; then
+            echo "  Who are you? Choose your name:"
+            for i in "${!USER_LIST[@]}"; do
+                echo "    $((i+1)). ${USER_LIST[$i]}"
+            done
+            echo ""
+            read -p "  Your choice [1-${#USER_LIST[@]}]: " USER_CHOICE
+            LAUNCH_USER="${USER_LIST[$((USER_CHOICE-1))]}"
+        fi
+
+        if [ -n "$LAUNCH_USER" ]; then
+            echo ""
+            echo "  Starting $AI_CMD as $LAUNCH_USER..."
+            echo "  (Say 'I'm ready to learn' to begin)"
+            echo ""
+            cd "$USERS_DIR/$LAUNCH_USER" && exec "$AI_CMD"
+        fi
     else
-        echo "  When ready, run:  cd users/<your-name> && $AI_CMD"
+        echo "  When ready:  cd users/<your-name> && $AI_CMD"
         echo ""
     fi
 elif [ -n "$AI_CMD" ]; then
-    echo "  Once $AI_CMD is installed, run:  cd users/<your-name> && $AI_CMD"
+    echo "  Once $AI_CMD is installed:  cd users/<your-name> && $AI_CMD"
     echo ""
 fi
