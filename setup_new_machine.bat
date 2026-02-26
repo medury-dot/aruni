@@ -119,11 +119,14 @@ if "%AI_CHOICE%"=="2" goto gemini_setup
 if "%AI_CHOICE%"=="3" goto codex_setup
 goto ai_skip
 
+set AI_READY=false
+
 :claude_setup
 echo   Setting up Claude Code...
 where claude >nul 2>&1
 if not errorlevel 1 (
     echo   OK: Claude Code already installed
+    set AI_READY=true
 ) else (
     where npm >nul 2>&1
     if errorlevel 1 (
@@ -132,11 +135,11 @@ if not errorlevel 1 (
     ) else (
         npm install -g @anthropic-ai/claude-code
         echo   OK: Claude Code installed
+        set AI_READY=true
     )
 )
 echo.
-echo   To log in, run: claude
-echo   You will be prompted to sign in with your Anthropic account.
+echo   Sign in: launch claude and follow the prompts to log in with your Anthropic account.
 set AI_CMD=claude
 goto ai_done
 
@@ -145,6 +148,7 @@ echo   Setting up Gemini CLI...
 where gemini >nul 2>&1
 if not errorlevel 1 (
     echo   OK: Gemini CLI already installed
+    set AI_READY=true
 ) else (
     where npm >nul 2>&1
     if errorlevel 1 (
@@ -153,12 +157,12 @@ if not errorlevel 1 (
     ) else (
         npm install -g @google/gemini-cli
         echo   OK: Gemini CLI installed
+        set AI_READY=true
     )
 )
 echo.
-echo   To log in, run: gemini
-echo   A browser window will open -- sign in with your Google account.
-echo   FREE tier available, no credit card needed.
+echo   Sign in: a browser window will open when you first launch gemini.
+echo   FREE tier available -- no credit card needed.
 set AI_CMD=gemini
 goto ai_done
 
@@ -167,6 +171,7 @@ echo   Setting up Codex (OpenAI)...
 where codex >nul 2>&1
 if not errorlevel 1 (
     echo   OK: Codex already installed
+    set AI_READY=true
 ) else (
     where npm >nul 2>&1
     if errorlevel 1 (
@@ -175,11 +180,12 @@ if not errorlevel 1 (
     ) else (
         npm install -g @openai/codex
         echo   OK: Codex installed
+        set AI_READY=true
     )
 )
 echo.
-echo   You need an OpenAI API key from: https://platform.openai.com/api-keys
-echo   Then set it: set OPENAI_API_KEY=sk-...
+echo   API key required: get one at https://platform.openai.com/api-keys
+echo   Then run: set OPENAI_API_KEY=sk-...
 echo   Add it to your system environment variables to make it permanent.
 set AI_CMD=codex
 goto ai_done
@@ -187,7 +193,8 @@ goto ai_done
 :ai_skip
 echo   Skipped. You can install your AI assistant later.
 echo   Options: claude ^| gemini ^| codex
-set AI_CMD=your-ai-command
+set AI_CMD=
+set AI_READY=false
 
 :ai_done
 
@@ -266,4 +273,22 @@ echo   IIT / IIM alumnus ^| ex-CIO ICICI ^| ex-Fintech Leader, Infosys
 echo.
 echo +==================================================================+
 echo.
+
+:: ── Launch AI now? ────────────────────────────────────────────────────────
+if "%AI_READY%"=="true" if not "%AI_CMD%"=="" (
+    set /p LAUNCH_NOW="  Launch %AI_CMD% now? [y/n]: "
+    echo.
+    if /i "%LAUNCH_NOW%"=="y" (
+        echo   Starting %AI_CMD%...
+        echo   (Say 'I'm ready to learn' to begin)
+        echo.
+        start %AI_CMD%
+    ) else (
+        echo   When ready, run:  cd users\^<your-name^> ^&^& %AI_CMD%
+        echo.
+    )
+) else if not "%AI_CMD%"=="" (
+    echo   Once %AI_CMD% is installed, run:  cd users\^<your-name^> ^&^& %AI_CMD%
+    echo.
+)
 pause

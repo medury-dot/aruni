@@ -136,67 +136,70 @@ echo ""
 read -p "  Your choice [1-4]: " AI_CHOICE
 echo ""
 
+AI_READY=false
+
 case "$AI_CHOICE" in
   1)
     echo "  Setting up Claude Code..."
     if command -v claude &>/dev/null; then
-        echo "  OK: Claude Code already installed ($(claude --version 2>/dev/null || echo 'installed'))"
+        echo "  OK: Claude Code already installed"
+        AI_READY=true
     else
         if ! command -v npm &>/dev/null; then
             echo "  NOTE: npm not found. Install Node.js first: https://nodejs.org"
             echo "  Then run: npm install -g @anthropic-ai/claude-code"
         else
-            npm install -g @anthropic-ai/claude-code
+            npm install -g @anthropic-ai/claude-code && AI_READY=true
             echo "  OK: Claude Code installed"
         fi
     fi
     echo ""
-    echo "  To log in, run:  claude"
-    echo "  You will be prompted to sign in with your Anthropic account."
+    echo "  Sign in: launch claude and follow the prompts to log in with your Anthropic account."
     AI_CMD="claude"
     ;;
   2)
     echo "  Setting up Gemini CLI..."
     if command -v gemini &>/dev/null; then
         echo "  OK: Gemini CLI already installed"
+        AI_READY=true
     else
         if ! command -v npm &>/dev/null; then
             echo "  NOTE: npm not found. Install Node.js first: https://nodejs.org"
             echo "  Then run: npm install -g @google/gemini-cli"
         else
-            npm install -g @google/gemini-cli
+            npm install -g @google/gemini-cli && AI_READY=true
             echo "  OK: Gemini CLI installed"
         fi
     fi
     echo ""
-    echo "  To log in, run:  gemini"
-    echo "  A browser window will open — sign in with your Google account."
-    echo "  FREE tier available, no credit card needed."
+    echo "  Sign in: a browser window will open when you first launch gemini."
+    echo "  FREE tier available — no credit card needed."
     AI_CMD="gemini"
     ;;
   3)
     echo "  Setting up Codex (OpenAI)..."
     if command -v codex &>/dev/null; then
         echo "  OK: Codex already installed"
+        AI_READY=true
     else
         if ! command -v npm &>/dev/null; then
             echo "  NOTE: npm not found. Install Node.js first: https://nodejs.org"
             echo "  Then run: npm install -g @openai/codex"
         else
-            npm install -g @openai/codex
+            npm install -g @openai/codex && AI_READY=true
             echo "  OK: Codex installed"
         fi
     fi
     echo ""
-    echo "  You need an OpenAI API key from: https://platform.openai.com/api-keys"
-    echo "  Then set it:  export OPENAI_API_KEY=sk-..."
+    echo "  API key required: get one at https://platform.openai.com/api-keys"
+    echo "  Then run:  export OPENAI_API_KEY=sk-..."
     echo "  Add that line to your ~/.zshrc or ~/.bashrc to make it permanent."
     AI_CMD="codex"
     ;;
   *)
     echo "  Skipped. You can install your AI assistant later."
     echo "  Options: claude | gemini | codex"
-    AI_CMD="your-ai-command"
+    AI_CMD=""
     ;;
 esac
 
@@ -278,3 +281,21 @@ echo "  IIT / IIM alumnus | ex-CIO ICICI | ex-Fintech Leader, Infosys"
 echo ""
 echo "╚══════════════════════════════════════════════════════════════════╝"
 echo ""
+
+# ── Launch AI now? ────────────────────────────────────────────────────────
+if [ "$AI_READY" = true ] && [ -n "$AI_CMD" ]; then
+    read -p "  Launch $AI_CMD now? [y/n]: " LAUNCH_NOW
+    echo ""
+    if [ "$LAUNCH_NOW" = "y" ] || [ "$LAUNCH_NOW" = "Y" ]; then
+        echo "  Starting $AI_CMD..."
+        echo "  (Say 'I'm ready to learn' to begin)"
+        echo ""
+        exec "$AI_CMD"
+    else
+        echo "  When ready, run:  cd users/<your-name> && $AI_CMD"
+        echo ""
+    fi
+elif [ -n "$AI_CMD" ]; then
+    echo "  Once $AI_CMD is installed, run:  cd users/<your-name> && $AI_CMD"
+    echo ""
+fi
