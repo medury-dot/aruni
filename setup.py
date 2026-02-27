@@ -19,7 +19,7 @@ from datetime import datetime, timedelta
 
 ARUNI_DIR = os.path.dirname(os.path.abspath(__file__))
 ENV_PATH = os.path.join(ARUNI_DIR, '.env')
-TEMPLATE_PATH = os.path.join(ARUNI_DIR, 'admin', 'prompt_template.md')
+TEMPLATE_PATH = os.path.join(ARUNI_DIR, '.aruni', 'prompt_template.md')
 USERS_DIR = os.path.join(ARUNI_DIR, 'users')
 
 SCOPES = [
